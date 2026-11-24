@@ -1,44 +1,22 @@
-FUTBOL ANALİZ MERKEZİ — ÜCRETSİZ VERİ SÜRÜMÜ
+FUTBOL ANALİZ PRO – KURULUM
 
-Bu sürüm API-Football yerine API Ninjas Football API kullanır.
-Kaynak dokümanı: https://api-ninjas.com/api/football
-Ücretsiz plan: 3.000 çağrı/ay, 100 çağrı/saat; yalnızca kişisel/değerlendirme kullanımı, ticari kullanım yok. Ücretsiz planda veri saklama/cache izni yoktur; bu Worker API yanıtlarını cache'lemez.
+Dosyalar:
+- index.html: uygulama arayüzü ve olasılık gösterimi
+- worker.js: Cloudflare Worker API geçidi ve analiz hesaplaması
+- sw.js, manifest.json, icon.svg: PWA dosyaları
 
-KAPSAM
-- Türkiye Süper Lig: superlig
-- Premier League: epl
-- La Liga: laliga
-- Bundesliga: bundesliga
-- Serie A: seriea
-- Ligue 1: ligue1
-- Şampiyonlar Ligi: ucl
-- Avrupa Ligi: uel
-- Konferans Ligi: uecl
-- Eredivisie, Primeira Liga, İskoçya, Belçika ve Yunanistan ligleri
+ÖNEMLİ:
+Bu sürümün profesyonel analiz ekranı yeni /analyze endpoint'ini kullanır. Bu nedenle Cloudflare'daki mevcut futbol-api Worker kodunun worker.js dosyasındaki yeni kodla güncellenmesi gerekir.
+API_NINJAS_KEY Secret'ını silmeyin/değiştirmeyin. Anahtar GitHub'a veya index.html'e konulmaz.
 
-KURULUM
-1. https://api-ninjas.com/ adresinden ücretsiz hesap aç ve Football API anahtarını al.
-2. Cloudflare > Workers & Pages > mevcut futbol Worker'ını aç.
-3. worker.js içeriğini tamamen bununla değiştir ve Deploy et.
-4. Worker > Settings > Variables and Secrets > Add variable/secret:
-   Key: API_NINJAS_KEY
-   Value: API Ninjas anahtarın
-   Secret seçeneğini işaretle, kaydet ve deploy et.
-5. GitHub futbol-analiz deposunda index.html, sw.js, manifest.json ve icon.svg dosyalarını bu ZIP'teki dosyalarla değiştir.
-6. PWA'da Bağlantı bölümüne Worker adresini yazıp test et.
-7. Maçlar bölümünde Süper Lig'i seçip bugünün fikstürünü getir.
+GITHUB PAGES:
+ZIP içindeki dosyaları depo kök dizinine yükleyin (futbol-analiz-main klasörünü değil, içindeki dosyaları). index.html, worker.js, sw.js, manifest.json ve icon.svg kökte bulunmalı.
 
-ÖNEMLİ ÜCRETSİZ PLAN SINIRLARI
-- API Ninjas ücretsiz planı 3.000 çağrı/ay ve 100 çağrı/saat sınırına sahiptir.
-- Ücretsiz planda canlı maçın dakika ve anlık skor alanları premium'dur. Canlı maçın durumu görülebilir; canlı skor/dakika gösterilmez.
-- Ücretsiz API dokümanında fikstür/sonuç, puan tablosu, kulüp ve kadro uç noktaları bulunur.
-- Sakatlık/cezalı listesi, kesin ilk 11, korner/kart/şut ayrıntıları ve bahis oranları bu ücretsiz entegrasyonda mevcut değildir. Bunlar varmış gibi tahmin edilmez.
-- Takım karşılaştırması her takımın sezon maçlarından son 5 tamamlanmış maçı hesaplar; iki API çağrısı yapar.
-- API Ninjas ücretsiz lisansı ticari kullanıma izin vermez. Ticari/halka açık gelir getirici kullanım için sağlayıcı lisansını kontrol et.
-- API anahtarını GitHub'a, index.html'e veya sohbete yazma. Yalnızca Cloudflare Secret olarak sakla.
+CLOUDFLARE:
+Mevcut futbol-api Worker'ını açın, Edit code ile worker.js içeriğini güncelleyin ve Deploy edin. Worker adı ve workers.dev adresi değişmez. API_NINJAS_KEY Secret aynen kalır.
 
-Sorun giderme
-- /health adresi {"ok":true,...} döndürmeli.
-- 401/403: Secret adı veya anahtar yanlış.
-- 429: saatlik/aylık ücretsiz kota dolmuş olabilir.
-- Bazı organizasyonlarda belirli tarihte maç olmaması normaldir.
+MODEL:
+Son 5/10/15 tamamlanmış maç; iç saha/deplasman gol ortalamaları; Poisson tabanlı 1X2, KG Var/Yok ve 1.5/2.5/3.5 üst olasılıkları. Güven puanı veri örneklemine dayanır. Bu değerler bahis kazancı garantisi değildir.
+
+VERİ SINIRLARI:
+API Ninjas ücretsiz planda güncel sezon verisi sağlar; canlı dakika/skor güncellemesi ve geçmiş sezon arşivi sınırlıdır. İlk yarı, korner, kart, sakatlık ve bahis oranları mevcut veri kaynağından sağlanmadığı için gösterilmez.
