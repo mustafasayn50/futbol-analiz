@@ -21,7 +21,7 @@ BU PAKETTE
 3) GITHUB PAGES
 - Bu ZIP içindeki index.html, sw.js, manifest.json ve icon.svg dosyalarını GitHub repository köküne yükleyin; mevcut dosyaların üzerine yazın.
 - Commit edin, Pages dağıtımını bekleyin.
-- PWA > Bağlantı ekranında Worker URL'sini girin ve bağlantıyı test edin.
+- Yeni sürümde Worker adresi otomatik doldurulur. Üstteki ⚙ Bağlantı düğmesinden adresi kontrol edip “Kaydet ve bağlantıyı test et” seçeneğine dokunun.
 
 4) VERİ UÇLARI
 GET /health
