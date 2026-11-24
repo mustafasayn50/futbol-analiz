@@ -1,66 +1,26 @@
-const API = "https://api.api-ninjas.com/v1";
-const CORS = {"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET, OPTIONS","Access-Control-Allow-Headers":"Content-Type"};
+const API="https://api.api-ninjas.com/v1";
+const CORS={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET, OPTIONS","Access-Control-Allow-Headers":"Content-Type"};
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{...CORS,"Content-Type":"application/json; charset=utf-8"}});
 const ALLOWED=new Set(["superlig","epl","laliga","bundesliga","seriea","ligue1","ucl","uel","uecl","eredivisie","primeiraliga","scottishpremiership","belgianproleague","greeksuperleague"]);
-async function upstream(path,env){
- if(!env.API_NINJAS_KEY) throw new Error("Cloudflare Secret API_NINJAS_KEY tanımlı değil.");
- const r=await fetch(API+path,{headers:{"X-Api-Key":env.API_NINJAS_KEY}});
- const body=await r.text();let data;try{data=JSON.parse(body)}catch{data={raw:body}}
- if(!r.ok)throw new Error(data.error||data.message||`API Ninjas HTTP ${r.status}`);
- return data;
-}
-function getId(t){return typeof t==="string"?t:t?.team_id||t?.id||""}
-function getName(t){return typeof t==="string"?t:t?.name||"Bilinmeyen takım"}
-function teamStats(matches,teamId){
- const done=(Array.isArray(matches)?matches:[]).filter(m=>m.status==="final"||m.status==="completed").sort((a,b)=>new Date(b.start_time||b.date)-new Date(a.start_time||a.date)).slice(0,5);
- let gf=0,ga=0,w=0,d=0,l=0;
- for(const m of done){const home=getId(m.home_team)===teamId;const ours=Number(home?m.home_score:m.away_score),theirs=Number(home?m.away_score:m.home_score);if(!Number.isFinite(ours)||!Number.isFinite(theirs))continue;gf+=ours;ga+=theirs;if(ours>theirs)w++;else if(ours===theirs)d++;else l++;}
- return {played:done.length,gf,ga,w,d,l,record:`${w}G ${d}B ${l}M`,matches:done};
-}
-export default {
- async fetch(request,env){
-  if(request.method==="OPTIONS")return new Response(null,{headers:CORS});
-  const u=new URL(request.url),p=u.pathname;
-  try{
-   if(p==="/health")return json({ok:true,provider:"API Ninjas Football API",freeTier:true});
-   if(p==="/leagues")return json({leagues:[...ALLOWED].map(code=>({code}))});
-   if(p==="/matches"){
-    const league=u.searchParams.get("league")||"superlig",date=u.searchParams.get("date");
-    if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);
-    const q=new URLSearchParams({league});if(date)q.set("date",date);
-    const data=await upstream("/soccermatches?"+q,env);
-    return json({matches:Array.isArray(data)?data:[],count:Array.isArray(data)?data.length:0,provider:"API Ninjas"});
-   }
-   if(p==="/standings"){
-    const league=u.searchParams.get("league")||"superlig";if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);
-    const data=await upstream("/soccerstandings?"+new URLSearchParams({league}),env);
-    return json({standings:Array.isArray(data)?data:[]});
-   }
-   if(p==="/teams"){
-    const league=u.searchParams.get("league")||"superlig";if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);
-    const data=await upstream("/soccerclubs?"+new URLSearchParams({league}),env);
-    return json({teams:Array.isArray(data)?data:[]});
-   }
-   if(p==="/squad"){
-    const league=u.searchParams.get("league"),team=u.searchParams.get("team");
-    if(!league||!ALLOWED.has(league)||!team)return json({error:"league ve team gerekli."},400);
-    const data=await upstream("/soccerplayers?"+new URLSearchParams({league,team}),env);
-    return json({players:Array.isArray(data)?data:[]});
-   }
-   if(p==="/compare"){
-    const league=u.searchParams.get("league")||"superlig",home=u.searchParams.get("home_team"),away=u.searchParams.get("away_team");
-    if(!ALLOWED.has(league)||!home||!away)return json({error:"league, home_team ve away_team gerekli."},400);
-    const [hm,am]=await Promise.all([
-      upstream("/soccermatches?"+new URLSearchParams({team:home}),env),
-      upstream("/soccermatches?"+new URLSearchParams({team:away}),env)
-    ]);
-    const hs=teamStats(hm,home),as=teamStats(am,away);
-    const homeName=hs.matches[0]?(getId(hs.matches[0].home_team)===home?getName(hs.matches[0].home_team):getName(hs.matches[0].away_team)):home;
-    const awayName=as.matches[0]?(getId(as.matches[0].home_team)===away?getName(as.matches[0].home_team):getName(as.matches[0].away_team)):away;
-    const summary=`${homeName}: son ${hs.played} tamamlanan maçta ${hs.w} galibiyet, ${hs.d} beraberlik, ${hs.l} mağlubiyet; maç başı ${hs.played?(hs.gf/hs.played).toFixed(2):"—"} gol attı ve ${hs.played?(hs.ga/hs.played).toFixed(2):"—"} gol yedi. ${awayName}: son ${as.played} tamamlanan maçta ${as.w} galibiyet, ${as.d} beraberlik, ${as.l} mağlubiyet; maç başı ${as.played?(as.gf/as.played).toFixed(2):"—"} gol attı ve ${as.played?(as.ga/as.played).toFixed(2):"—"} gol yedi.`;
-    return json({home:{name:homeName,...hs},away:{name:awayName,...as},summary});
-   }
-   return json({error:"Endpoint bulunamadı."},404);
-  }catch(e){return json({error:e.message||"Beklenmeyen hata"},502);}
- }
-};
+async function upstream(path,env){if(!env.API_NINJAS_KEY)throw Error("Cloudflare Secret API_NINJAS_KEY tanımlı değil.");const r=await fetch(API+path,{headers:{"X-Api-Key":env.API_NINJAS_KEY}});const body=await r.text();let data;try{data=JSON.parse(body)}catch{data={raw:body}}if(!r.ok)throw Error(data.error||data.message||`API Ninjas HTTP ${r.status}`);return data;}
+const id=t=>typeof t==="string"?t:t?.team_id||t?.id||"";const name=t=>typeof t==="string"?t:t?.name||"Bilinmeyen takım";
+function cleanMatches(matches,teamId){return (Array.isArray(matches)?matches:[]).filter(m=>(m.status==="final"||m.status==="completed")&&m.home_score!=null&&m.away_score!=null&&(id(m.home_team)===teamId||id(m.away_team)===teamId)).sort((a,b)=>new Date(b.start_time||b.date)-new Date(a.start_time||a.date));}
+function stats(all,teamId,n){const matches=cleanMatches(all,teamId).slice(0,n);let gf=0,ga=0,w=0,d=0,l=0,hp=0,hgf=0,hga=0,ap=0,agf=0,aga=0;for(const m of matches){const home=id(m.home_team)===teamId,ours=Number(home?m.home_score:m.away_score),theirs=Number(home?m.away_score:m.home_score);if(!Number.isFinite(ours)||!Number.isFinite(theirs))continue;gf+=ours;ga+=theirs;if(ours>theirs)w++;else if(ours===theirs)d++;else l++;if(home){hp++;hgf+=ours;hga+=theirs}else{ap++;agf+=ours;aga+=theirs}}
+const played=matches.length;return {played,gf,ga,w,d,l,record:`${w}G ${d}B ${l}M`,gfpg:played?gf/played:0,gapg:played?ga/played:0,home_played:hp,home_gfpg:hp?hgf/hp:0,home_gapg:hp?hga/hp:0,away_played:ap,away_gfpg:ap?agf/ap:0,away_gapg:ap?aga/ap:0,homeGF:hgf,homeGA:hga,awayGF:agf,awayGA:aga,matches};}
+function poisson(k,lambda){let term=Math.exp(-lambda);for(let i=1;i<=k;i++)term*=lambda/i;return term;}
+function probabilities(lh,la){const max=10,ph=Array.from({length:max+1},(_,i)=>poisson(i,lh)),pa=Array.from({length:max+1},(_,i)=>poisson(i,la));let hw=0,dr=0,aw=0,btts=0,o15=0,o25=0,o35=0,mass=0;for(let h=0;h<=max;h++)for(let a=0;a<=max;a++){const prob=ph[h]*pa[a];mass+=prob;if(h>a)hw+=prob;else if(h===a)dr+=prob;else aw+=prob;if(h>0&&a>0)btts+=prob;if(h+a>=2)o15+=prob;if(h+a>=3)o25+=prob;if(h+a>=4)o35+=prob;}return {home_win:hw/mass,draw:dr/mass,away_win:aw/mass,btts:btts/mass,over15:o15/mass,over25:o25/mass,over35:o35/mass};}
+function meanOr(a,b,fallback){const vals=[a,b].filter(x=>Number.isFinite(x)&&x>=0);return vals.length?vals.reduce((x,y)=>x+y,0)/vals.length:fallback;}
+function makeAnalysis(hm,am,hid,aid,n){const h=stats(hm,hid,n),a=stats(am,aid,n);const hName=name(h.matches[0]?(id(h.matches[0].home_team)===hid?h.matches[0].home_team:h.matches[0].away_team):hid),aName=name(a.matches[0]?(id(a.matches[0].home_team)===aid?a.matches[0].home_team:a.matches[0].away_team):aid);
+// Blend team recent scoring/conceding with venue-specific records. If venue samples are absent, use all-match averages.
+const hAttack=meanOr(h.home_played?h.home_gfpg:null,h.gfpg,h.gfpg),hDef=meanOr(h.home_played?h.home_gapg:null,h.gapg,h.gapg),aAttack=meanOr(a.away_played?a.away_gfpg:null,a.gfpg,a.gfpg),aDef=meanOr(a.away_played?a.away_gapg:null,a.gapg,a.gapg);
+const leagueBase=2.65,expH=Math.max(.15,Math.min(4.2,(hAttack+aDef)/2)),expA=Math.max(.15,Math.min(4.2,(aAttack+hDef)/2));const p=probabilities(expH,expA);const totalPlayed=h.played+a.played,venueN=h.home_played+a.away_played;let confidence=Math.round(Math.min(100,(Math.min(h.played,n)+Math.min(a.played,n))/(2*n)*58+Math.min(venueN,10)/10*27+(h.played>=5&&a.played>=5?15:0)));let label=confidence>=80?"İyi örneklem":confidence>=60?"Orta örneklem":"Sınırlı veri";let note=`${h.played} ev sahibi ve ${a.played} deplasman takım maçı kullanıldı. İç saha/deplasman alt örneklemi toplam ${venueN} maç.`;if(h.played<n||a.played<n)note+=" İstenen maç sayısına ulaşılamadı; mevcut tamamlanmış maçlar kullanıldı.";
+return {home:{name:hName,...h},away:{name:aName,...a},sample_size:n,probabilities:p,expected_goals:{home:expH,away:expA},confidence:{score:confidence,label,note},model:"Poisson; recent form and venue split"};}
+export default {async fetch(request,env){if(request.method==="OPTIONS")return new Response(null,{headers:CORS});const u=new URL(request.url),p=u.pathname;try{
+if(p==="/health")return json({ok:true,provider:"API Ninjas Football API",freeTier:true,analytics:"Poisson v1"});
+if(p==="/leagues")return json({leagues:[...ALLOWED].map(code=>({code}))});
+if(p==="/matches"){const league=u.searchParams.get("league")||"superlig",date=u.searchParams.get("date");if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);const q=new URLSearchParams({league});if(date)q.set("date",date);const data=await upstream("/soccermatches?"+q,env);return json({matches:Array.isArray(data)?data:[],count:Array.isArray(data)?data.length:0,provider:"API Ninjas"});}
+if(p==="/standings"){const league=u.searchParams.get("league")||"superlig";if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);const data=await upstream("/soccerstandings?"+new URLSearchParams({league}),env);return json({standings:Array.isArray(data)?data:[]});}
+if(p==="/teams"){const league=u.searchParams.get("league")||"superlig";if(!ALLOWED.has(league))return json({error:"Desteklenmeyen lig."},400);const data=await upstream("/soccerclubs?"+new URLSearchParams({league}),env);return json({teams:Array.isArray(data)?data:[]});}
+if(p==="/analyze"||p==="/compare"){const league=u.searchParams.get("league")||"superlig",home=u.searchParams.get("home_team"),away=u.searchParams.get("away_team"),n=Math.max(5,Math.min(15,Number(u.searchParams.get("sample")||10)));if(!ALLOWED.has(league)||!home||!away||home===away)return json({error:"Geçerli lig ve iki farklı takım gerekli."},400);const [hm,am]=await Promise.all([upstream("/soccermatches?"+new URLSearchParams({team:home}),env),upstream("/soccermatches?"+new URLSearchParams({team:away}),env)]);const result=makeAnalysis(hm,am,home,away,n);if(!result.home.played||!result.away.played)return json({error:"Takımlardan biri için bu sezon tamamlanmış maç verisi bulunamadı."},404);return json(result);}
+return json({error:"Endpoint bulunamadı."},404);
+}catch(e){return json({error:e.message||"Beklenmeyen hata"},502)}}};
