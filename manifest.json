@@ -1,7 +1,6 @@
 {
   "name": "Futbol Analiz Merkezi",
   "short_name": "Futbol Analiz",
-  "description": "Futbol takım, kadro ve istatistik analiz platformu",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
