@@ -1,154 +1,24 @@
-<!doctype html>
-<html lang="tr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#101827">
-<meta name="description" content="Futbol maçları için takım, kadro, istatistik ve olasılık analiz platformu.">
-<link rel="manifest" href="./manifest.json">
-<link rel="icon" href="./icon.svg" type="image/svg+xml">
-<title>Futbol Analiz Merkezi</title>
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#101827"><link rel="manifest" href="./manifest.json"><link rel="icon" href="./icon.svg"><title>Futbol Analiz Merkezi</title>
 <style>
-:root{--bg:#0b1220;--panel:#121d2e;--panel2:#18263a;--line:#26364d;--text:#edf3fb;--muted:#91a3ba;--green:#31d69a;--yellow:#ffc857;--red:#ff6b78;--blue:#70a7ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#1b3550 0,transparent 32%),var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
-header{padding:20px 17px 12px;position:sticky;top:0;background:rgba(11,18,32,.92);backdrop-filter:blur(14px);z-index:5;border-bottom:1px solid #1d2b40}
-.brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#2dd69b,#168b78);display:grid;place-items:center;color:#061c19;font-weight:900;font-size:18px}
-h1{font-size:18px;margin:0;letter-spacing:.1px}.sub{font-size:11px;color:var(--muted);margin-top:3px}.topline{display:flex;justify-content:space-between;align-items:center}.livepill{font-size:10px;color:var(--green);border:1px solid #23654f;border-radius:20px;padding:5px 8px}
-main{padding:15px;max-width:850px;margin:auto}.screen{display:none}.screen.active{display:block}.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px}.sectionhead h2{font-size:15px;margin:0}.muted{color:var(--muted)}.tiny{font-size:11px;color:var(--muted)}
-.card{background:linear-gradient(145deg,var(--panel),#101a2a);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:12px;box-shadow:0 8px 22px #0002}
-.hero{background:linear-gradient(120deg,#123c3a,#14283c 65%,#18233a);border-color:#286057;padding:17px}.hero h2{font-size:19px;margin:0 0 6px}.hero p{margin:0;color:#b5d7d1;font-size:12px;line-height:1.5}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{background:#0d1726;border:1px solid var(--line);border-radius:13px;padding:12px}.stat strong{display:block;font-size:21px;margin-top:5px}.stat span{font-size:11px;color:var(--muted)}
-button,.btn{border:0;border-radius:11px;padding:11px 13px;background:var(--green);color:#062018;font-weight:750;font-size:13px;cursor:pointer}.btn.secondary,button.secondary{background:#23344b;color:var(--text);border:1px solid #344861}.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}button:active{transform:scale(.98)}
-.actions{display:flex;gap:8px;flex-wrap:wrap}.matchrow{display:flex;align-items:center;justify-content:space-between;gap:8px}.teams{font-weight:700}.vs{font-size:10px;color:var(--muted);padding:0 8px}.tag{font-size:10px;border-radius:20px;padding:5px 8px;background:#20354a;color:#a9c6e8;white-space:nowrap}.tag.green{background:#123e34;color:#6ce4b5}.tag.yellow{background:#44371d;color:#ffd77c}.tag.red{background:#482630;color:#ff9ca5}
-label{display:block;font-size:11px;color:var(--muted);margin:11px 0 5px}input,select,textarea{width:100%;background:#0b1523;border:1px solid #30435b;color:var(--text);border-radius:10px;padding:11px;font:14px system-ui;outline:none}input:focus,select:focus{border-color:var(--green)}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}
-.tabs{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(12,20,33,.96);backdrop-filter:blur(15px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom))}
-.tab{background:transparent;color:#8ea1b8;padding:7px 2px;font-size:10px;font-weight:600;border-radius:10px}.tab .ico{display:block;font-size:17px;margin-bottom:3px}.tab.active{color:var(--green);background:#14352f}
-.result{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #26364d}.result:last-child{border:0}.prob{font-size:17px;font-weight:800;color:var(--green)}.meter{height:6px;background:#26364d;border-radius:10px;overflow:hidden;margin-top:7px}.meter i{display:block;height:100%;background:linear-gradient(90deg,#1b9d7b,#48e4ac);border-radius:10px}
-.notice{font-size:11px;line-height:1.5;color:#b7c5d7;background:#17283b;border:1px solid #314861;padding:10px;border-radius:11px;margin:10px 0}.warning{border-color:#66522a;background:#30291b;color:#f7d58c}.pillrow{display:flex;gap:6px;flex-wrap:wrap}.pill{font-size:10px;padding:6px 9px;border-radius:30px;background:#1b2c41;color:#afc4dd}
-.empty{text-align:center;padding:24px 10px;color:var(--muted)}.empty b{display:block;color:var(--text);margin-bottom:6px}
-table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;padding:9px 5px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
-@media(min-width:650px){main{padding:22px}.grid2{grid-template-columns:repeat(4,1fr)}}
-</style>
-</head>
-<body>
-<header><div class="topline"><div class="brand"><div class="logo">FA</div><div><h1>Futbol Analiz Merkezi</h1><div class="sub">İstatistik • Kadro • Olasılık • Canlı takip</div></div></div><span class="livepill">● PWA TASLAK</span></div></header>
-<main>
-<section id="home" class="screen active">
- <div class="card hero"><h2>Maçları veriye dayalı incele.</h2><p>Takım formu, iç saha/deplasman, muhtemel 11, sakatlıklar ve oranları tek analiz akışında birleştiren platformun ilk sürümü.</p><div class="actions" style="margin-top:13px"><button onclick="show('compare')">Maç analizi başlat</button><button class="secondary" onclick="show('tracker')">Canlı maç girişi</button></div></div>
- <div class="sectionhead"><h2>Analiz kapsamı</h2><span class="tiny">İlk sürüm</span></div>
- <div class="grid2"><div class="stat"><span>Bahis kategorisi</span><strong>7</strong></div><div class="stat"><span>Analiz modu</span><strong>2</strong></div><div class="stat"><span>Veri katmanı</span><strong>Hazır</strong></div><div class="stat"><span>Canlı bağlantı</span><strong>Bekliyor</strong></div></div>
- <div class="sectionhead"><h2>Analiz edilecek başlıklar</h2></div>
- <div class="card"><div class="pillrow"><span class="pill">Maç sonucu</span><span class="pill">Alt / Üst</span><span class="pill">Karşılıklı gol</span><span class="pill">Korner</span><span class="pill">Kart</span><span class="pill">İlk yarı</span><span class="pill">Oyuncu istatistikleri</span></div></div>
- <div class="sectionhead"><h2>Önemli not</h2></div>
- <div class="notice warning">Bu paket çalışan arayüz ve yerel analiz prototipidir. Henüz Maçkolik veya başka bir sağlayıcıdan canlı veri çekmez. Gerçek sakatlık, kadro, hava durumu ve oran verileri API/lisans bağlantısı kurulduğunda gösterilecektir. Örnek veri gerçek maç tahmini değildir.</div>
-</section>
-
-<section id="compare" class="screen">
- <div class="sectionhead"><h2>Takım karşılaştırma</h2><span class="tag green">Maç öncesi</span></div>
- <div class="card">
-  <div class="formgrid">
-   <div><label>Ev sahibi takım</label><input id="homeTeam" placeholder="Örn. Galatasaray"></div>
-   <div><label>Deplasman takımı</label><input id="awayTeam" placeholder="Örn. Fenerbahçe"></div>
-   <div><label>Lig / organizasyon</label><input id="league" placeholder="Örn. Süper Lig"></div>
-   <div><label>Maç tarihi</label><input id="matchDate" type="date"></div>
-   <div><label>Ev sahibi son 5 maç gol ort.</label><input id="hg" type="number" min="0" max="10" step=".1" value="1.6"></div>
-   <div><label>Deplasman son 5 maç gol ort.</label><input id="ag" type="number" min="0" max="10" step=".1" value="1.2"></div>
-   <div><label>Ev sahibi yediği gol ort.</label><input id="hc" type="number" min="0" max="10" step=".1" value="0.9"></div>
-   <div><label>Deplasman yediği gol ort.</label><input id="ac" type="number" min="0" max="10" step=".1" value="1.1"></div>
-   <div><label>Ev sahibi iç saha galibiyet %</label><input id="hw" type="number" min="0" max="100" value="60"></div>
-   <div><label>Deplasman dış saha galibiyet %</label><input id="aw" type="number" min="0" max="100" value="35"></div>
-  </div>
-  <div class="notice">Alanlar başlangıç için manuel girilir. Gerçek veri bağlantısı geldiğinde otomatik doldurulacak. Bilinmeyen bilgiyi tahmin ederek doldurma.</div>
-  <button style="width:100%" onclick="analyze()">Analizi hesapla</button>
- </div>
- <div id="analysisOutput"></div>
-</section>
-
-<section id="squad" class="screen">
- <div class="sectionhead"><h2>Kadro ve maç koşulları</h2><span class="tag yellow">Veri girişi</span></div>
- <div class="card">
-  <label>Takım</label><select id="squadTeam"><option>Ev sahibi</option><option>Deplasman</option></select>
-  <div class="formgrid">
-   <div><label>Muhtemel diziliş</label><input id="formation" placeholder="4-2-3-1"></div>
-   <div><label>Kaleci durumu</label><select id="keeper"><option>Bilinmiyor</option><option>İlk tercih oynuyor</option><option>Yedek kaleci</option><option>Sakat / cezalı</option></select></div>
-   <div class="full"><label>Muhtemel ilk 11 (oyuncuları virgülle ayır)</label><textarea id="lineup" rows="3" placeholder="Kaleci, sağ bek, stoper..."></textarea></div>
-   <div class="full"><label>Sakat / şüpheli oyuncular</label><textarea id="injuries" rows="2" placeholder="Oyuncu — durum — beklenen dönüş"></textarea></div>
-   <div class="full"><label>Cezalı / kart sınırındaki oyuncular</label><textarea id="suspensions" rows="2" placeholder="Oyuncu — ceza veya kart sınırı"></textarea></div>
-   <div class="full"><label>Muhtemel 11 kaynağı / son kontrol zamanı</label><input id="squadSource" placeholder="Kaynak adı ve kontrol saati"></div>
-  </div>
-  <button style="width:100%;margin-top:12px" onclick="saveSquad()">Kadro notlarını kaydet</button>
- </div>
- <div id="squadSaved" class="card"><span class="muted">Henüz kadro notu kaydedilmedi.</span></div>
- <div class="notice warning">Muhtemel 11, sakatlık ve ceza bilgileri doğrulanmadan kesin kabul edilmez. Resmî ilk 11 açıklandığında ayrıca güncellenmelidir.</div>
- <div class="sectionhead"><h2>Maç koşulları kontrol listesi</h2></div>
- <div class="card" id="conditions">
-  <label><input type="checkbox"> Stadyum / saha zemini doğrulandı</label>
-  <label><input type="checkbox"> Hava durumu kontrol edildi</label>
-  <label><input type="checkbox"> Hakem ataması ve kart ortalaması kontrol edildi</label>
-  <label><input type="checkbox"> Takımların dinlenme süresi kontrol edildi</label>
-  <label><input type="checkbox"> Seyahat ve fikstür yoğunluğu incelendi</label>
- </div>
-</section>
-
-<section id="tracker" class="screen">
- <div class="sectionhead"><h2>Canlı maç takip</h2><span class="tag green">Manuel giriş</span></div>
- <div class="card">
-  <div class="formgrid">
-   <div><label>Ev sahibi</label><input id="liveHome" placeholder="Ev sahibi"></div><div><label>Deplasman</label><input id="liveAway" placeholder="Deplasman"></div>
-   <div><label>Dakika</label><input id="minute" type="number" min="0" max="130" placeholder="32"></div><div><label>Skor</label><input id="score" placeholder="1-0"></div>
-   <div><label>Ev sahibi korner</label><input id="homeCorners" type="number" min="0" value="0"></div><div><label>Deplasman korner</label><input id="awayCorners" type="number" min="0" value="0"></div>
-   <div><label>Ev sahibi sarı kart</label><input id="homeCards" type="number" min="0" value="0"></div><div><label>Deplasman sarı kart</label><input id="awayCards" type="number" min="0" value="0"></div>
-   <div><label>Ev sahibi şut</label><input id="homeShots" type="number" min="0" value="0"></div><div><label>Deplasman şut</label><input id="awayShots" type="number" min="0" value="0"></div>
-  </div><button style="width:100%;margin-top:12px" onclick="saveLive()">Canlı veriyi kaydet</button>
- </div>
- <div id="liveSaved" class="card"><span class="muted">Henüz canlı maç verisi girilmedi.</span></div>
- <div class="notice">Canlı veri şu an elle girilir. Otomatik dakika, skor, korner, kart ve şut akışı için lisanslı canlı skor API'si bağlanacak.</div>
-</section>
-
-<section id="history" class="screen">
- <div class="sectionhead"><h2>Analiz geçmişi</h2><button class="ghost" onclick="clearHistory()">Geçmişi temizle</button></div>
- <div id="historyList" class="card"><div class="empty"><b>Henüz kayıt yok</b>Bir maç analizi oluşturduğunda burada görünecek.</div></div>
- <div class="notice">Geçmiş kayıtları bu cihazın tarayıcısında saklanır. İlk sürümde hesap senkronizasyonu yoktur.</div>
-</section>
-</main>
-<nav class="tabs">
- <button class="tab active" data-screen="home" onclick="show('home')"><span class="ico">⌂</span>Ana sayfa</button>
- <button class="tab" data-screen="compare" onclick="show('compare')"><span class="ico">⚖</span>Karşılaştır</button>
- <button class="tab" data-screen="squad" onclick="show('squad')"><span class="ico">♙</span>Kadro</button>
- <button class="tab" data-screen="tracker" onclick="show('tracker')"><span class="ico">◉</span>Canlı</button>
- <button class="tab" data-screen="history" onclick="show('history')"><span class="ico">▤</span>Geçmiş</button>
-</nav>
+:root{--bg:#0b1220;--p:#121d2e;--line:#2b3c53;--t:#edf4fc;--m:#91a3ba;--g:#31d69a;--y:#ffc857}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 85% -10%,#1b3550,transparent 32%),var(--bg);color:var(--t);font:15px system-ui;padding-bottom:85px}header{position:sticky;top:0;background:#0b1220ed;backdrop-filter:blur(12px);padding:17px;border-bottom:1px solid var(--line);z-index:4}.brand{display:flex;gap:10px;align-items:center}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#31d69a,#168b78);display:grid;place-items:center;color:#062018;font-weight:900}h1{font-size:18px;margin:0}.sub,.tiny{font-size:11px;color:var(--m);margin-top:3px}main{max-width:850px;margin:auto;padding:15px}.screen{display:none}.screen.active{display:block}.card{background:linear-gradient(145deg,var(--p),#101a2a);border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0}.hero{background:linear-gradient(120deg,#123c3a,#14283c 65%,#18233a);border-color:#286057}.hero h2{margin:0 0 7px;font-size:20px}.hero p{font-size:12px;color:#bdd7d2;line-height:1.5;margin:0}h2{font-size:16px}.head{display:flex;align-items:center;justify-content:space-between;margin:18px 0 8px}label{display:block;font-size:11px;color:var(--m);margin:10px 0 5px}input,select{width:100%;background:#0b1523;color:var(--t);border:1px solid #30435b;border-radius:10px;padding:11px;font:14px system-ui}button{border:0;border-radius:10px;background:var(--g);color:#062018;font-weight:750;padding:11px 13px;font-size:13px}button.secondary{background:#23364d;color:var(--t);border:1px solid #3a506b}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}.actions{display:flex;gap:8px;flex-wrap:wrap}.tabs{position:fixed;bottom:0;left:0;right:0;background:#0c1421f5;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding:8px 5px calc(8px + env(safe-area-inset-bottom));z-index:5}.tab{background:transparent;color:var(--m);font-size:10px;padding:7px 2px}.tab.active{color:var(--g);background:#14352f}.tab span{display:block;font-size:17px;margin-bottom:3px}.notice{font-size:11px;line-height:1.5;color:#c1cede;background:#17283b;border:1px solid #314861;padding:10px;border-radius:10px;margin:10px 0}.warn{background:#30291b;border-color:#66522a;color:#f7d58c}.tag{font-size:10px;border-radius:20px;padding:5px 8px;background:#20354a;color:#b8cde3}.green{background:#123e34;color:#72e5b7}.row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.row:last-child{border:0}.empty{text-align:center;padding:18px;color:var(--m)}.meter{height:5px;background:#26364d;border-radius:9px;margin-top:6px}.meter i{display:block;height:100%;background:var(--g);border-radius:9px}pre{white-space:pre-wrap;overflow-wrap:anywhere;color:#bcd0e4;font-size:11px}@media(min-width:650px){main{padding:22px}}
+</style></head><body><header><div class="brand"><div class="logo">FA</div><div><h1>Futbol Analiz Merkezi</h1><div class="sub">Otomatik futbol verisi • Takım • Kadro • Analiz</div></div></div></header><main>
+<section id="home" class="screen active"><div class="card hero"><h2>Gerçek futbol verisiyle analiz.</h2><p>Ligleri, takımları, fikstürleri ve takım istatistiklerini veri sağlayıcısından otomatik al.</p><div class="actions" style="margin-top:13px"><button onclick="show('matches')">Maç seç</button><button class="secondary" onclick="show('settings')">Bağlantı ayarları</button></div></div><div class="head"><h2>Bağlantı durumu</h2><span id="badge" class="tag">Kontrol edilmedi</span></div><div class="card" id="health">Backend adresi girilince bağlantı kontrol edilecek.</div><div class="notice warn">Gerçek veri için API-Football hesabı ve Cloudflare Worker kurulumu gerekir. Sağlayıcı anahtarı sadece Worker secret olarak saklanır; GitHub'a veya iPhone'a yazılmaz.</div></section>
+<section id="matches" class="screen"><div class="head"><h2>Lig ve takım seçimi</h2><span class="tag green">Otomatik</span></div><div class="card"><label>Ülke / bölge</label><select id="country" onchange="loadLeagues()"><option value="Turkey">Türkiye</option><option value="England">İngiltere</option><option value="Spain">İspanya</option><option value="Germany">Almanya</option><option value="Italy">İtalya</option><option value="France">Fransa</option><option value="Netherlands">Hollanda</option><option value="Portugal">Portekiz</option></select><label>Lig</label><select id="league" onchange="loadTeams()"><option>Önce API bağlantısı kurun</option></select><div class="grid"><div><label>Ev sahibi</label><select id="homeTeam"></select></div><div><label>Deplasman</label><select id="awayTeam"></select></div><div class="full"><label>Maç tarihi</label><input id="matchDate" type="date"></div></div><div class="actions" style="margin-top:12px"><button onclick="loadFixtures()">Fikstürü getir</button><button class="secondary" onclick="compareTeams()">Takımları karşılaştır</button></div><div id="fixtures" class="empty">API bağlantısından sonra seçilen ligin gerçek fikstürü burada listelenecek.</div></div><div id="comparison"></div></section>
+<section id="settings" class="screen"><div class="head"><h2>Güvenli veri bağlantısı</h2><span class="tag">Backend</span></div><div class="card"><p class="tiny">Cloudflare Worker adresini gir. API-Football anahtarı Worker üzerinde secret olarak tutulur.</p><label>Cloudflare Worker URL</label><input id="apiBase" placeholder="https://futbol-api.kullanici.workers.dev"><button style="width:100%;margin-top:12px" onclick="saveApi()">Kaydet ve bağlantıyı test et</button><div id="test" class="tiny" style="margin-top:10px">Henüz test edilmedi.</div></div><div class="card"><b>Bağlanacak otomatik veriler</b><div class="row">Ülke, lig, takım listesi <span>API</span></div><div class="row">Fikstür ve maç sonuçları <span>API</span></div><div class="row">Takım sezon istatistikleri <span>API</span></div><div class="row">Muhtemel / kesin kadro <span>Maç bazlı</span></div><div class="row">Sakat / cezalı oyuncular <span>Maç bazlı</span></div><div class="row">Oranlar <span>Lig kapsamına bağlı</span></div></div><div class="notice warn">Ücretsiz API-Football kotası: 100 istek/gün, 10 istek/dakika. Bu yüzden istekleri önbelleğe alacağız ve otomatik yenilemeyi sınırlayacağız.</div></section>
+<section id="history" class="screen"><div class="head"><h2>Analiz geçmişi</h2></div><div id="historyList" class="card empty">İlk analizini oluşturduğunda burada görünecek.</div></section>
+</main><nav class="tabs"><button class="tab active" data-id="home" onclick="show('home')"><span>⌂</span>Ana sayfa</button><button class="tab" data-id="matches" onclick="show('matches')"><span>⚽</span>Maçlar</button><button class="tab" data-id="settings" onclick="show('settings')"><span>⇄</span>Bağlantı</button><button class="tab" data-id="history" onclick="show('history')"><span>▤</span>Geçmiş</button></nav>
 <script>
-const $=id=>document.getElementById(id);
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.screen===id));if(id==='history')renderHistory();window.scrollTo(0,0)}
-function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
-function poissonAtLeastOne(lambda){return 1-Math.exp(-lambda)}
-function analyze(){
- const h=$('homeTeam').value.trim()||'Ev sahibi', a=$('awayTeam').value.trim()||'Deplasman';
- const hg=clamp(+$('hg').value||0,0,10),ag=clamp(+$('ag').value||0,0,10),hc=clamp(+$('hc').value||0,0,10),ac=clamp(+$('ac').value||0,0,10);
- const hw=clamp(+$('hw').value||0,0,100),aw=clamp(+$('aw').value||0,0,100);
- // Prototype-only transparent heuristic; not a trained predictive model.
- const homeLambda=clamp((hg+ac)/2*(.85+hw/300),.15,4.2);
- const awayLambda=clamp((ag+hc)/2*(.85+aw/400),.15,4.2);
- const total=homeLambda+awayLambda;
- const over15=poissonAtLeastOne(total)*(1-Math.exp(-total)*(1+total)); // P(2+), via Poisson
- const over25=1-Math.exp(-total)*(1+total+total*total/2);
- const btts=poissonAtLeastOne(homeLambda)*poissonAtLeastOne(awayLambda);
- const homeWin=clamp(50+(hw-aw)*.24+(homeLambda-awayLambda)*13,8,82);
- const draw=clamp(27-Math.abs(homeLambda-awayLambda)*5,10,34);
- const awayWin=100-homeWin-draw;
- const rows=[['Ev sahibi kazanır',homeWin],['Beraberlik',draw],['Deplasman kazanır',awayWin],['1,5 gol üstü',over15*100],['2,5 gol üstü',over25*100],['Karşılıklı gol',btts*100]];
- const out=$('analysisOutput');out.innerHTML=`<div class="sectionhead"><h2>Örnek model çıktısı</h2><span class="tag yellow">Deneysel</span></div><div class="card"><div class="matchrow"><b>${escapeHtml(h)}</b><span class="vs">VS</span><b>${escapeHtml(a)}</b></div><p class="tiny">Beklenen gol: ${homeLambda.toFixed(2)} – ${awayLambda.toFixed(2)} · Toplam ${total.toFixed(2)}</p>${rows.map(([n,v])=>`<div class="result"><div style="flex:1">${n}<div class="meter"><i style="width:${clamp(v,0,100)}%"></i></div></div><div class="prob">${v.toFixed(1)}%</div></div>`).join('')}<div class="notice warning">Bu oranlar gerçek veriyle eğitilmiş model çıktısı değildir. Basitleştirilmiş Poisson/heuristik prototipidir; korner, kart, ilk yarı ve oyuncu bahisleri için henüz tahmin üretilmez. Bahis önerisi veya kazanç garantisi değildir.</div><button class="secondary" onclick="saveAnalysis('${escapeAttr(h)}','${escapeAttr(a)}',${homeWin.toFixed(1)},${draw.toFixed(1)},${awayWin.toFixed(1)})">Analizi geçmişe kaydet</button></div>`;
-}
-function saveAnalysis(h,a,x,y,z){let arr=JSON.parse(localStorage.getItem('fa_history')||'[]');arr.unshift({h,a,x,y,z,date:new Date().toLocaleString('tr-TR')});localStorage.setItem('fa_history',JSON.stringify(arr.slice(0,50)));alert('Analiz bu cihaza kaydedildi.')}
-function saveSquad(){const d={team:$('squadTeam').value,formation:$('formation').value,keeper:$('keeper').value,lineup:$('lineup').value,injuries:$('injuries').value,suspensions:$('suspensions').value,source:$('squadSource').value};localStorage.setItem('fa_squad',JSON.stringify(d));$('squadSaved').innerHTML=`<b>${escapeHtml(d.team)} kadro notları kaydedildi</b><p class="tiny">Diziliş: ${escapeHtml(d.formation||'Belirtilmedi')} · Kaleci: ${escapeHtml(d.keeper)}</p><p>${escapeHtml(d.lineup||'İlk 11 girilmedi')}</p><p class="tiny">Sakat/şüpheli: ${escapeHtml(d.injuries||'Belirtilmedi')}</p><p class="tiny">Cezalı: ${escapeHtml(d.suspensions||'Belirtilmedi')}</p><p class="tiny">Kaynak: ${escapeHtml(d.source||'Belirtilmedi')}</p>`}
-function saveLive(){const d={home:$('liveHome').value,away:$('liveAway').value,minute:$('minute').value,score:$('score').value,hc:$('homeCorners').value,ac:$('awayCorners').value,hcard:$('homeCards').value,acard:$('awayCards').value,hs:$('homeShots').value,as:$('awayShots').value,date:new Date().toLocaleTimeString('tr-TR')};localStorage.setItem('fa_live',JSON.stringify(d));$('liveSaved').innerHTML=`<b>${escapeHtml(d.home)} ${escapeHtml(d.score)} ${escapeHtml(d.away)}</b><p class="tiny">${escapeHtml(d.minute)}. dakika · Korner ${escapeHtml(d.hc)}-${escapeHtml(d.ac)} · Sarı kart ${escapeHtml(d.hcard)}-${escapeHtml(d.acard)} · Şut ${escapeHtml(d.hs)}-${escapeHtml(d.as)}</p><span class="tag green">Cihaza kaydedildi · ${d.date}</span>`}
-function renderHistory(){let a=JSON.parse(localStorage.getItem('fa_history')||'[]');$('historyList').innerHTML=a.length?a.map(x=>`<div class="result"><div><b>${escapeHtml(x.h)} – ${escapeHtml(x.a)}</b><div class="tiny">${escapeHtml(x.date)}</div></div><div class="tiny">1 ${x.x}% · X ${x.y}% · 2 ${x.z}%</div></div>`).join(''):'<div class="empty"><b>Henüz kayıt yok</b>Bir maç analizi oluşturduğunda burada görünecek.</div>'}
-function clearHistory(){if(confirm('Bu cihazdaki analiz geçmişi silinsin mi?')){localStorage.removeItem('fa_history');renderHistory()}}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function escapeAttr(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
-if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
-const savedSquad=localStorage.getItem('fa_squad');if(savedSquad){const d=JSON.parse(savedSquad);$('squadTeam').value=d.team;$('formation').value=d.formation;$('keeper').value=d.keeper;$('lineup').value=d.lineup;$('injuries').value=d.injuries;$('suspensions').value=d.suspensions;$('squadSource').value=d.source;saveSquad()}
-const savedLive=localStorage.getItem('fa_live');if(savedLive){const d=JSON.parse(savedLive);$('liveHome').value=d.home;$('liveAway').value=d.away;$('minute').value=d.minute;$('score').value=d.score;$('homeCorners').value=d.hc;$('awayCorners').value=d.ac;$('homeCards').value=d.hcard;$('awayCards').value=d.acard;$('homeShots').value=d.hs;$('awayShots').value=d.as;saveLive()}
-</script>
-</body></html>
+const $=id=>document.getElementById(id);let leagues=[],teams=[];
+const api=()=>localStorage.getItem('fa_api')||'';
+function show(id){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('active',e.id===id));document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('active',e.dataset.id===id));scrollTo(0,0)}
+async function call(path){if(!api())throw Error('Önce Worker URL girilmeli.');let r=await fetch(api()+path);let d=await r.json();if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+async function saveApi(){let v=$('apiBase').value.trim().replace(/\/$/,'');localStorage.setItem('fa_api',v);await testApi()}
+async function testApi(){let el=$('test');try{let d=await call('/health');el.textContent='Bağlantı başarılı · '+d.provider;$('badge').textContent='API bağlı';$('badge').className='tag green';$('health').textContent='API-Football bağlantısı aktif. Lig listesini yükleyebilirsin.';await loadLeagues()}catch(e){el.textContent='Bağlantı hatası: '+e.message;$('badge').textContent='Bağlantı yok';$('health').textContent=e.message}}
+async function loadLeagues(){let s=$('league');s.innerHTML='<option>Ligler yükleniyor…</option>';try{leagues=await call('/leagues?country='+encodeURIComponent($('country').value));s.innerHTML='';leagues.forEach(l=>{let o=document.createElement('option');o.value=l.id;o.textContent=l.name+' · '+l.season;o.dataset.season=l.season;s.append(o)});if(!leagues.length)throw Error('Bu ülke/sezon için lig bulunamadı.');await loadTeams()}catch(e){s.innerHTML='<option>Veri alınamadı</option>';$('fixtures').textContent=e.message}}
+function selectedLeague(){return leagues.find(x=>String(x.id)===$('league').value)||leagues[0]}
+async function loadTeams(){let l=selectedLeague();if(!l)return;let s1=$('homeTeam'),s2=$('awayTeam');s1.innerHTML=s2.innerHTML='<option>Takımlar yükleniyor…</option>';try{teams=await call('/teams?league_id='+l.id+'&season='+l.season);for(let s of [s1,s2]){s.innerHTML='';teams.forEach(t=>{let o=document.createElement('option');o.value=t.id;o.textContent=t.name;s.append(o)})}if(s2.options.length>1)s2.selectedIndex=1}catch(e){s1.innerHTML=s2.innerHTML='<option>Takım verisi alınamadı</option>';}}
+async function loadFixtures(){let l=selectedLeague();if(!l)return;let date=$('matchDate').value;let el=$('fixtures');el.textContent='Gerçek fikstür yükleniyor…';try{let rows=await call('/fixtures?league_id='+l.id+'&season='+l.season+'&date='+encodeURIComponent(date));el.innerHTML='';if(!rows.length){el.textContent='Bu tarih için fikstür bulunamadı.';return}rows.forEach(f=>{let d=document.createElement('div');d.className='row';d.textContent=f.home_team+' – '+f.away_team+' · '+(f.status||'')+' · '+(f.time||'');el.append(d)})}catch(e){el.textContent='Fikstür alınamadı: '+e.message}}
+async function compareTeams(){let l=selectedLeague(),h=$('homeTeam').value,a=$('awayTeam').value;if(!l||!h||!a)return;let el=$('comparison');el.innerHTML='<div class="card">Takım istatistikleri alınıyor…</div>';try{let d=await call('/compare?league_id='+l.id+'&season='+l.season+'&home_team='+h+'&away_team='+a);el.innerHTML='<div class="card"><b>'+$('homeTeam').selectedOptions[0].textContent+' – '+$('awayTeam').selectedOptions[0].textContent+'</b><p class="tiny">Sağlayıcının döndürdüğü sezon takım istatistikleri</p><pre>'+JSON.stringify(d,null,2)+'</pre></div>';let hist=JSON.parse(localStorage.getItem('fa_history')||'[]');hist.unshift({h:$('homeTeam').selectedOptions[0].textContent,a:$('awayTeam').selectedOptions[0].textContent,date:new Date().toLocaleString('tr-TR')});localStorage.setItem('fa_history',JSON.stringify(hist.slice(0,30)))}catch(e){el.innerHTML='<div class="card notice warn">Karşılaştırma alınamadı: '+e.message+'</div>'}}
+function renderHistory(){let h=JSON.parse(localStorage.getItem('fa_history')||'[]');$('historyList').innerHTML=h.length?h.map(x=>'<div class="row"><b>'+x.h+' – '+x.a+'</b><span class="tiny">'+x.date+'</span></div>').join(''):'Henüz analiz yok.'}
+$('apiBase').value=api();if(api())testApi();if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script></body></html>
