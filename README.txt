@@ -16,7 +16,7 @@ CLOUDFLARE:
 Mevcut futbol-api Worker'ını açın, Edit code ile worker.js içeriğini güncelleyin ve Deploy edin. Worker adı ve workers.dev adresi değişmez. API_NINJAS_KEY Secret aynen kalır.
 
 MODEL:
-Son 5/10/15 tamamlanmış maç; iç saha/deplasman gol ortalamaları; Poisson tabanlı 1X2, KG Var/Yok ve 1.5/2.5/3.5 üst olasılıkları. Güven puanı veri örneklemine dayanır. Bu değerler bahis kazancı garantisi değildir.
+Son 5/10/15 tamamlanmış maç; iç saha/deplasman gol ortalamaları; Poisson tabanlı 1X2, KG Var/Yok, 0.5/1.5/2.5/3.5 üst-alt, en olası skor ve ilk yarı 1X2 / gol baremleri. İlk yarı yüzdeleri doğrudan ilk yarı maç verisi değil, maç toplam gol beklentisinin %45’i varsayımıyla türetilir. Güven puanı veri örneklemine dayanır. Bu değerler bahis kazancı garantisi değildir.
 
 VERİ SINIRLARI:
-API Ninjas ücretsiz planda güncel sezon verisi sağlar; canlı dakika/skor güncellemesi ve geçmiş sezon arşivi sınırlıdır. İlk yarı, korner, kart, sakatlık ve bahis oranları mevcut veri kaynağından sağlanmadığı için gösterilmez.
+API Ninjas ücretsiz planda güncel sezon verisi sağlar; canlı dakika/skor güncellemesi ve geçmiş sezon arşivi sınırlıdır. Korner, kart, sakatlık ve bahis oranları mevcut veri kaynağından sağlanmadığı için gösterilmez.
