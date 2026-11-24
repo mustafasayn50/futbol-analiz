@@ -1,16 +1,1 @@
-{
-  "name": "Futbol Analiz Merkezi",
-  "short_name": "Futbol Analiz",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b1020",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
-}
+{"name":"Futbol Analiz Pro","short_name":"Futbol Pro","start_url":"./","display":"standalone","background_color":"#090f1d","theme_color":"#090f1d","description":"Futbol verileri ve istatistiksel maç olasılık analizi","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
